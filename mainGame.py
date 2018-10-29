@@ -7,62 +7,56 @@ player = []
 computer = []
 
 #Trackib mängu jooksul ai ja mängija punkte
-playerPunktid = 0
-computerPunktid = 0
+player_punktid = 0
+computer_punktid = 0
 
 
 
 #Main event handlemine toimub siin. Mäng jookseb siin
 def game():
 
-    player = start()
-    computer = start()
-    playerPunktid = score(player)
-    computerPunktid = score(computer)
+    player = starting_Hand()
+    computer = starting_Hand()
+    player_punktid = score(player)
+    computer_punktid = score(computer)
     print(player)
     print(computer)
-    print(playerPunktid)
-    print(computerPunktid)
+    print(player_punktid)
+    print(computer_punktid)
 
 
 #Funktsioon annab kätte esimesed kaks kaarti
-def start():
+def starting_Hand():
     list = []
-    kaart = pakk[randint(1,len(pakk))]
-    list.append(kaart)
-    kaart = pakk[randint(1,len(pakk))]
-    list.append(kaart)
-
+    list.append(tõmba_kaart())
+    list.append(tõmba_kaart())
     return list
 
-
+def tõmba_kaart():
+    number = randint(1,len(pakk))
+    kaart = pakk[number]
+    pakk.pop(number)
+    return kaart
 
 
 #Arvutab skoori ja tagastab selle
 def score(kaardid):
     punktid = 0
-    for j in range(len(kaardid)):
-            punktid += kaardid[j]
+    for i in range(len(kaardid)):
+            punktid += kaardid[i]
 
     return punktid
 
 
-
-#
-#
-# #Kasutaja saab ainult esimesel käigul alla anda (automaatselt alla anda)
-# def surrender():
-#
-#
-#
 # def ai():
 #
 #
 
 # #kui kasutaja valib hit, siis tõmmatakse kaardipakkist kaart (jookseb animatsioon) ja tehakse score arvutus
-# def hit():
-#
-#
+def hit(käsi):
+    käsi.append(tõmba_kaart())
+    return käsi
+
 # #Kasutaja jätab käigu vahele AI võib teha käigu
 # def stand()
 #
@@ -80,6 +74,7 @@ def score(kaardid):
 #
 #
 #
-# def ai():
+#def ai():
+
 
 game()
