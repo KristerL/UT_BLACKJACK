@@ -1,95 +1,90 @@
-from random import randint
+from random import shuffle
 
 pakk = [2,3,4,5,6,7,8,9,10,11,12,13,14]*4 # kaardipakk on numbritega, et kergemini arvutada skoori, kuigi 11-14 on tegelt pildikaardid
 
 #Trackib mängu jooksul ai ja mängija kaarte
-player = []
-computer = []
+mängija_kaardid = []
+ai_kaardid = []
 
-#Trackib mängu jooksul ai ja mängija punkte
-player_punktid = 0
-computer_punktid = 0
-
-
+#Trackib mängu jooksul ai ja mängija punkte !!!!
 
 #Main event handlemine toimub siin. Mäng jookseb siin
 def game():
-    while True:
-        print("Vajuta enterit, et mängida 1 käsi või kirjuta exit, et väljuda")
-        a = input()
-        if a == "exit":
-            break
+    otsus = 0
+    while otsus != "q":
+        if otsus != "h":
+            mängija_kaardid = käsi()
+            ai_kaardid = käsi()
+            näita_seisu(mängija_kaardid, ai_kaardid)
+        otsus = input("[H]it, [S]tand").lower()
+        if otsus == "h":
+            mängija_kaardid = hit(mängija_kaardid)
+            näita_seisu(mängija_kaardid, ai_kaardid)
+            if skoor(mängija_kaardid) > 21:
+                pass
+            else: continue
+        while skoor(ai_kaardid) < 17 and skoor(mängija_kaardid) < 22:
+            ai_kaardid = hit(ai_kaardid)
+        print(võitja(mängija_kaardid,ai_kaardid))
+        otsus = input("[E]dasi või [Q]uit").lower()
+    exit()
 
-        player = starting_Hand()
-        computer = starting_Hand()
-        player_punktid = score(player)
-        print("Sul on kaardid:",str(player))
-        print("Sul on punkte:",str(player_punktid))
-        print("Üks arvuti kaartidest on", str(computer[1]))
-
-        #Hittimise tsükkel
-        while True:
-            otsus = int(input("Vajuta 1, et kaart tõmmata või vajuta 0, et passida"))
-            if otsus == 1:
-                player = hit(player)
-                player_punktid = score(player)
-                print("Sul on kaardid:", str(player))
-                print("Sul on punkte:", str(player_punktid))
-                if player_punktid > 21:
-                    pass
-                else:
-                    continue
-            break
-
-        #Vaatab kes võitis
-        if player_punktid > 21:
-            print("Kaotasid, sest läksid lõhki")
-            continue
-        kaotus, computer_punktid = ai(computer, player_punktid)
-        if kaotus == True:
-            print("Arvuti võitis skooriga", str(computer_punktid))
-        elif kaotus == False:
-            print("Sina võitsid, arvutil jäi punkte", str(computer_punktid))
 
 #Funktsioon annab kätte esimesed kaks kaarti
-def starting_Hand():
-    list = []
-    list.append(tõmba_kaart())
-    list.append(tõmba_kaart())
-    return list
+def käsi():
+    kaardid = []
+    kaardid.append(tõmba_kaart())
+    kaardid.append(tõmba_kaart())
+    return kaardid
 
 def tõmba_kaart():
-    number = randint(1,len(pakk))
-    kaart = pakk[number]
-    pakk.pop(number)
+    shuffle(pakk)
+    kaart = pakk.pop()
+    if kaart == 11: kaart = "J"
+    if kaart == 12: kaart = "Q"
+    if kaart == 13: kaart = "K"
+    if kaart == 14: kaart = "A"
     return kaart
 
-
-#Arvutab skoori ja tagastab selle
-def score(kaardid):
-    punktid = 0
-    for i in range(len(kaardid)):
-        if kaardid[i] == 14:
-            if punktid <= 10:
-                punktid += 11
-            else:
-                punktid += 1
-        elif 14 > kaardid[i] > 10:
-            punktid += 10
-        else:
-            punktid += kaardid[i]
-
-    return punktid
-
-
-# def ai():
-#
-#
-
-# #kui kasutaja valib hit, siis tõmmatakse kaardipakkist kaart (jookseb animatsioon) ja tehakse score arvutus
+#kui kasutaja valib hit, siis tõmmatakse kaardipakkist kaart (jookseb animatsioon) ja tehakse score arvutus
 def hit(käsi):
     käsi.append(tõmba_kaart())
     return käsi
+
+#Arvutab skoori ja tagastab selle
+def skoor(kaardid):
+    punktid = 0
+    for kaart in kaardid:
+        if kaart == "J" or kaart == "Q" or kaart == "K": punktid += 10
+        elif kaart == "A":
+            if punktid >= 11:
+                punktid += 1
+            else: punktid += 11
+        else: punktid += kaart
+
+    return punktid
+
+def näita_seisu(mängija_kaardid, ai_kaardid):
+    print("Sul on kaardid "+ str(mängija_kaardid) + " ,andes skoori " + str(skoor((mängija_kaardid))))
+    print("Arvutil on üks kaart " + str(ai_kaardid[1]))
+
+def võitja(mängija_kaardid, ai_kaardid):
+    m_skoor = skoor(mängija_kaardid)
+    a_skoor = skoor(ai_kaardid)
+
+    if m_skoor > 21:
+        print("sa oled busted")
+    elif a_skoor > 21:
+        print("arvuti busted")
+    elif m_skoor == a_skoor:
+        print("Viik! Mõlemale jäi " + str(m_skoor) + " punkti.")
+    elif m_skoor > a_skoor:
+        print("m > a")
+    elif a_skoor > m_skoor:
+        print("a > m")
+        print(a_skoor)
+
+
 
 # #Kasutaja jätab käigu vahele AI võib teha käigu
 # def stand()
@@ -108,21 +103,7 @@ def hit(käsi):
 #
 #
 #
-def ai(kaardid, player_punktid):
-    punktid = 0
-    while True:
-        if player_punktid > 21:
-            pass
-        else:
-            punktid = score(kaardid)
-            while True:
-                if punktid < 17:
-                    kaardid = hit(kaardid)
-                    punktid = score(kaardid)
-                else: break
-            if punktid > 21 or punktid < player_punktid:
-                return False, punktid
-        return True, punktid
+
 
 
 
