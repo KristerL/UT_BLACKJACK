@@ -6,8 +6,6 @@ pakk = [2,3,4,5,6,7,8,9,10,11,12,13,14]*4 # kaardipakk on numbritega, et kergemi
 mängija_kaardid = []
 ai_kaardid = []
 
-#Trackib mängu jooksul ai ja mängija punkte !!!!
-
 #Main event handlemine toimub siin. Mäng jookseb siin
 def game():
     otsus = 0
@@ -64,32 +62,27 @@ def skoor(kaardid):
 
     return punktid
 
+#Näitab käesolevaid kaarte/punkte ja ühte kaarti, mis arvutil on
 def näita_seisu(mängija_kaardid, ai_kaardid):
     print("Sul on kaardid "+ str(mängija_kaardid) + " ,andes skoori " + str(skoor((mängija_kaardid))))
     print("Arvutil on üks kaart " + str(ai_kaardid[1]))
 
+#Leiab, kes on võitja ja tagastab tulemuse
 def võitja(mängija_kaardid, ai_kaardid):
     m_skoor = skoor(mängija_kaardid)
     a_skoor = skoor(ai_kaardid)
 
     if m_skoor > 21:
-        print("sa oled busted")
+        return("Kaotus! Läksid lõhki.")
     elif a_skoor > 21:
-        print("arvuti busted")
+        return("Arvuti läks lõhki")
     elif m_skoor == a_skoor:
-        print("Viik! Mõlemale jäi " + str(m_skoor) + " punkti.")
+        return("Viik! Mõlemale jäi " + str(m_skoor) + " punkti.")
     elif m_skoor > a_skoor:
-        print("m > a")
+        return("Võit! Skoor sinul: " + str(m_skoor) + " vs skoor arvutil: " + str(a_skoor))
     elif a_skoor > m_skoor:
-        print("a > m")
-        print(a_skoor)
+        return("Kaotus! Skoor sinul: " + str(m_skoor) + " vs skoor arvutil: " + str(a_skoor))
 
-
-
-# #Kasutaja jätab käigu vahele AI võib teha käigu
-# def stand()
-#
-# #
 # # #Kasutaja saab
 # # def doubleDown():
 # #
