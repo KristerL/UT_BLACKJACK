@@ -8,6 +8,7 @@ pakk = [2,3,4,5,6,7,8,9,10,11,12,13,14]*4 # kaardipakk on numbritega, et kergemi
 #Trackib mängu jooksul ai ja mängija kaarte
 mängija_kaardid = []
 ai_kaardid = []
+raha = int(input("Kui suure summaga mängid? "))
 
 """
 display_width = 1500
@@ -97,29 +98,68 @@ game_loop()
 pygame.quit()
 quit()
 """
+
 #Main event handlemine toimub siin. Mäng jookseb siin
 def game():
     otsus = 0
+    panus = 0
+    global raha
+
     while otsus != "q":
-        if len(pakk) < 6:
+
+        if len(pakk) <= 6:
             print("Pakist said kaardid otsa, mäng on läbi")
             break
+
         if otsus != "h":
             mängija_kaardid = käsi()
             ai_kaardid = käsi()
+            panus = int(input("Sisesta oma panus: "))
             näita_seisu(mängija_kaardid, ai_kaardid)
-        otsus = input("[H]it, [S]tand").lower()
+
+            if blackjack(mängija_kaardid,ai_kaardid) == True:
+                if skoor(mängija_kaardid) == 21 and skoor(ai_kaardid) == 21:
+                    print("Mõlemal on Blackjack!")
+                    continue
+                elif skoor(mängija_kaardid) == 21:
+                    print("Palju Õnne! Sul on Blackjack.")
+                    tekst, panus = (võitja(mängija_kaardid, ai_kaardid, panus))
+                    print(tekst)
+                    raha = raha + panus
+                    print("Sul on raha", str(raha))
+                    continue
+                elif skoor(ai_kaardid) == 21:
+                    print("Kahjuks on arvutil Blackjack.")
+                    tekst, panus = (võitja(mängija_kaardid, ai_kaardid, panus))
+                    print(tekst)
+                    raha = raha + panus
+                    print("Sul on raha", str(raha))
+                    continue
+        if otsus == "h":
+            otsus = input("[H]it, [S]tand: ").lower()
+        else: otsus = input("[H]it, [S]tand, [D]ouble down: ").lower()
+
         if otsus == "h":
             mängija_kaardid = hit(mängija_kaardid)
             näita_seisu(mängija_kaardid, ai_kaardid)
             if skoor(mängija_kaardid) > 21:
                 pass
             else: continue
+
+        elif otsus == "d":
+            mängija_kaardid, panus = double_down(mängija_kaardid, panus)
+            näita_seisu(mängija_kaardid,ai_kaardid)
+            pass
+
         while skoor(ai_kaardid) < 17 and skoor(mängija_kaardid) < 22:
             ai_kaardid = hit(ai_kaardid)
-        print(võitja(mängija_kaardid,ai_kaardid))
-        print(len(pakk))
+        tekst, panus = (võitja(mängija_kaardid,ai_kaardid,panus))
+        print(tekst)
+        raha = raha + panus
+        print("Sul on raha", str(raha))
         otsus = input("[E]dasi või [Q]uit").lower()
+
+    print("Tulid mängust ära summaga", str(raha))
     exit()
 
 
@@ -130,7 +170,7 @@ def käsi():
     kaardid.append(tõmba_kaart())
     return kaardid
 
-
+#Tõmbab pakist ühe kaardi ja lisab selle kätte
 def tõmba_kaart():
     shuffle(pakk)
     kaart = pakk.pop()
@@ -141,7 +181,7 @@ def tõmba_kaart():
 
     return kaart
 
-#kui kasutaja valib hit, siis tõmmatakse kaardipakkist kaart (jookseb animatsioon) ja tehakse score arvutus
+#Kui kasutaja valib hit, siis tõmmatakse kaardipakkist kaart (jookseb animatsioon) ja tehakse score arvutus
 def hit(käsi):
     käsi.append(tõmba_kaart())
     return käsi
@@ -163,25 +203,40 @@ def skoor(kaardid):
 
     return punktid
 
-#Näitab käesolevaid kaarte/punkte ja ühte kaarti, mis arvutil on
+#Näitab käesolevaid kaarte/punkte, panust ja ühte kaarti, mis arvutil on
 def näita_seisu(mängija_kaardid, ai_kaardid):
     print("Sul on kaardid "+ str(mängija_kaardid) + " ,andes skoori " + str(skoor((mängija_kaardid))))
     print("Arvutil on üks kaart " + str(ai_kaardid[1]))
 
 #Leiab, kes on võitja ja tagastab tulemuse
-def võitja(mängija_kaardid, ai_kaardid):
+def võitja(mängija_kaardid, ai_kaardid, panus):
     m_skoor = skoor(mängija_kaardid)
     a_skoor = skoor(ai_kaardid)
 
     if m_skoor > 21:
-        return("Kaotus! Läksid lõhki.")
+        return ("Kaotus! Läksid lõhki."), (-panus)
     elif a_skoor > 21:
-        return("Arvuti läks lõhki")
+        return("Arvuti läks lõhki"), (panus)
     elif m_skoor == a_skoor:
-        return("Viik! Mõlemale jäi " + str(m_skoor) + " punkti.")
+        return("Viik! Mõlemale jäi " + str(m_skoor) + " punkti."), 0
     elif m_skoor > a_skoor:
-        return("Võit! Skoor sinul: " + str(m_skoor) + " vs skoor arvutil: " + str(a_skoor))
+        return("Võit! Skoor sinul: " + str(m_skoor) + " vs skoor arvutil: " + str(a_skoor)), (panus)
     elif a_skoor > m_skoor:
-        return("Kaotus! Skoor sinul: " + str(m_skoor) + " vs skoor arvutil: " + str(a_skoor))
+        return("Kaotus! Skoor sinul: " + str(m_skoor) + " vs skoor arvutil: " + str(a_skoor)), (-panus)
+
+def blackjack(käsi1, käsi2):
+    if skoor(käsi1) == 21 and skoor(käsi2) == 21:
+        return True
+    elif skoor(käsi1) == 21:
+        return True
+    elif skoor(käsi2) == 21:
+        return True
+    else:
+        return False
+
+def double_down(käsi, panus):
+    käsi = hit(käsi)
+    panus = panus * 2
+    return käsi, panus
 
 game()
