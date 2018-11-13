@@ -115,6 +115,9 @@ def game():
             mängija_kaardid = käsi()
             ai_kaardid = käsi()
             panus = int(input("Sisesta oma panus: "))
+            if panus > raha:
+                while panus > raha:
+                    panus = int(input("Sisesta oma panus: "))
             näita_seisu(mängija_kaardid, ai_kaardid)
 
             if blackjack(mängija_kaardid,ai_kaardid) == True:
@@ -157,6 +160,8 @@ def game():
         print(tekst)
         raha = raha + panus
         print("Sul on raha", str(raha))
+        if raha < 0:
+            break
         otsus = input("[E]dasi või [Q]uit").lower()
 
     print("Tulid mängust ära summaga", str(raha))
