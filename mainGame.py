@@ -115,8 +115,8 @@ def game():
             mängija_kaardid = käsi()
             ai_kaardid = käsi()
             panus = int(input("Sisesta oma panus: "))
-            if panus > raha:
-                while panus > raha:
+            if panus > raha or panus < 1:
+                while panus > raha or panus < 1:
                     panus = int(input("Sisesta oma panus: "))
             näita_seisu(mängija_kaardid, ai_kaardid)
 
