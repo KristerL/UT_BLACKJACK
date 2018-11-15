@@ -40,8 +40,8 @@ clock = pygame.time.Clock()  # fpsi jaoks
 
 # image load in section
 tagurpidi_kaart_pilt = pygame.image.load("tagurpidikaart.png")  # laeb sisse pildi
-main_menu_pic = pygame.image.load("main_page.jpeg")
-other_bg_pic = pygame.image.load("test2.jpg")
+main_menu_pic = pygame.image.load("./Images/main_page.jpeg")
+other_bg_pic = pygame.image.load("./Images/test2.jpg")
 
 # loob teksti objekti, mis võtab sisendiks teksti ja fonti
 def text_objects(text, font):
