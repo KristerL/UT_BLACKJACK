@@ -4,13 +4,15 @@ from pygame import *
 import logic
 
 
-def game_loop():
-    #main menu
-    #turns
-    #if game over back to menu
+krister = logic.Player(100000)
+
+print(krister.get_money())
+krister.decrease_money(1000)
+
+print(krister.get_money())
 
 
-game_loop()
+
 
 
 

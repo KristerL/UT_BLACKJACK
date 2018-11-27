@@ -23,6 +23,8 @@ class Player(object):
 class Hand(object):
     def __init__(self):
         hand_list = []
+        hand_list.append(Card_deck.get_random_card())
+        hand_list.append(Card_deck.get_random_card())
         self.hand = hand_list
 
     # adds a random card from card_deck to hand
@@ -36,6 +38,12 @@ class Hand(object):
     # returns the current hand
     def get_hand(self):
         return self.hand
+
+    def score(self):
+        score = 0
+        for elem in self.hand:
+            ##
+            print("fix me")
 
 
 # handles the current bet
@@ -75,3 +83,5 @@ class Card_deck(object):
     def get_random_card(self):
         card = self.card_pack.pop()  # since the deck is shuffled we get a random card
         return card
+
+
