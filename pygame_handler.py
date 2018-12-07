@@ -76,7 +76,7 @@ class button(object):
             pygame.draw.rect(current_display_object, self.active, (self.x_coord, self.y_coord, self.width, self.height))
 
             if click[0] == 1:
-                return True
+                return "close"
             # if is clicked, will run the action
             if click[0] == 1 and self.action != None:
                 self.action()

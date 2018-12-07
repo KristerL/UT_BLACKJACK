@@ -21,19 +21,20 @@ class Player(object):
 
 # Class that handles player hand
 class Hand(object):
-    def __init__(self):
+    def __init__(self, current_card_deck):
         hand_list = []
-        hand_list.append(Card_deck.get_random_card())
-        hand_list.append(Card_deck.get_random_card())
+        hand_list.append(Card_deck.get_random_card(current_card_deck))
+        hand_list.append(Card_deck.get_random_card(current_card_deck))
         self.hand = hand_list
+        self.card_deck = current_card_deck
 
     # adds a random card from card_deck to hand
     def hit(self):
-        self.hand.append(Card_deck.get_random_card())
+        self.hand.append(Card_deck.get_random_card(self.card_deck))
 
     # adds a random card from card deck to hand
     def double_down(self):
-        self.hand.append(Card_deck.get_random_card())
+        self.hand.append(Card_deck.get_random_card(self.card_deck))
 
     # returns the current hand
     def get_hand(self):
@@ -83,5 +84,8 @@ class Card_deck(object):
     def get_random_card(self):
         card = self.card_pack.pop()  # since the deck is shuffled we get a random card
         return card
+
+    def get_card_pack(self):
+        return self.card_pack
 
 

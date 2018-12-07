@@ -37,13 +37,15 @@ def menu_loop():
 
             game_start_button.display_button(starter_class.game_display)
 
-            rules_button.display_button(starter_class.game_display)
+            test = rules_button.display_button(starter_class.game_display)
 
             # button is created that usually return None type, but after clicking it will return True
             value = quit_button.display_button(starter_class.game_display)
             # if crashed is True, the loop will break
-            crashed = value
 
+            if test or value:
+                crashed = True
+                return "hey"
 
 
             # After quitting pygame, it will close
