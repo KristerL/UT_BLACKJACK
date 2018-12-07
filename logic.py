@@ -1,32 +1,15 @@
 from random import shuffle
 
 
-# Handles player money
+# Handles player money and hand
 class Player(object):
-    def __init__(self, my_money=1000):
-        self.my_money = my_money
-
-    # decreases player money by amount
-    def decrease_money(self, money):
-        self.my_money = self.my_money - money
-
-    # increases player money by amount
-    def increase_money(self, money):
-        self.my_money = self.my_money + money
-
-    # returns the amount of money
-    def get_money(self):
-        return self.my_money
-
-
-# Class that handles player hand
-class Hand(object):
-    def __init__(self, current_card_deck):
+    def __init__(self, current_card_deck, my_money = 1000):
         hand_list = []
         hand_list.append(Card_deck.get_random_card(current_card_deck))
         hand_list.append(Card_deck.get_random_card(current_card_deck))
-        self.hand = hand_list
+        self.hand =hand_list
         self.card_deck = current_card_deck
+        self.my_money = my_money
 
     # adds a random card from card_deck to hand
     def hit(self):
@@ -40,12 +23,33 @@ class Hand(object):
     def get_hand(self):
         return self.hand
 
+    # shows the score of current hand
     def score(self):
         score = 0
         for elem in self.hand:
-            ##
+            self.hand = self.hand.sort()
+            if elem < 11:
+                score += elem
+            elif elem == 11 or elem == 12 or elem == 13:
+                score += 10
+            elif elem == 14:
+                if score < 11:
+                    score += 11
+                else: score += 1
+
             print("fix me")
 
+    # decreases player money by amount
+    def decrease_money(self, money):
+        self.my_money = self.my_money - money
+
+    # increases player money by amount
+    def increase_money(self, money):
+        self.my_money = self.my_money + money
+
+    # returns the amount of money
+    def get_money(self):
+        return self.my_money
 
 # handles the current bet
 class Bet(object):
