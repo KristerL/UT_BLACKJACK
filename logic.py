@@ -7,7 +7,7 @@ class Player(object):
         hand_list = []
         hand_list.append(Card_deck.get_random_card(current_card_deck))
         hand_list.append(Card_deck.get_random_card(current_card_deck))
-        self.hand =hand_list
+        self.hand = hand_list
         self.card_deck = current_card_deck
         self.my_money = my_money
 
@@ -28,15 +28,6 @@ class Player(object):
         score = 0
         for elem in self.hand:
             self.hand = self.hand.sort()
-            if elem < 11:
-                score += elem
-            elif elem == 11 or elem == 12 or elem == 13:
-                score += 10
-            elif elem == 14:
-                if score < 11:
-                    score += 11
-                else: score += 1
-
             print("fix me")
 
     # decreases player money by amount
@@ -69,8 +60,8 @@ class Bet(object):
 class Card_deck(object):
     # creates a new deck
     def __init__(self):
-        self.card_pack = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-                          14] * 4
+        self.card_pack = [2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K",
+                          "A"] * 4
 
     # shuffles the deck using shuffle form random module
     def shuffle_deck(self):
