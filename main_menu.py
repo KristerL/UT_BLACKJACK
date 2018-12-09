@@ -2,6 +2,9 @@ import pygame
 from pygame import *
 import pygame_handler
 import ImageLoad
+import rules_page
+
+
 
 # Create different objects, that are necessary objects
 # starter class initializes pygame and creates the display object
@@ -16,19 +19,22 @@ game_start_button = pygame_handler.button("Start", 50, 575, 400, 200, 100, (0, 2
 rules_button = pygame_handler.button("Rules", 50, 575, 550, 200, 100, (0, 0, 230), (30, 30, 255))
 
 
+
 # main menu runs on the menu_loop
 def menu_loop():
     # if crashed, the menu will exit
     crashed = False
     # after exiting, screen will be retured, so the main body knows what window to open next
-    screen = "quit"
+    screen = "menu"
 
     while not crashed:
         for event in pygame.event.get():
 
             if screen == "menu":
+                crashed = False
+            elif screen == "rule_page":
                 crashed = True
-                return "menu"
+                rules_page.rule_loop()
 
             # blit the background on to the display
             starter_class.game_display.blit(background_image.get_image(), (0, 0))
@@ -45,7 +51,7 @@ def menu_loop():
 
             if test or value:
                 crashed = True
-                return "hey"
+
 
 
             # After quitting pygame, it will close

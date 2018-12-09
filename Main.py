@@ -1,6 +1,8 @@
 import pygame
+
 import pygame_handler
 import ImageLoad
+
 import logic
 
 game_screen = pygame_handler.pygame_starter()

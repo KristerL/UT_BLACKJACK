@@ -4,6 +4,7 @@ import ImageLoad
 
 starter = pygame_handler.pygame_starter()
 
+
 header = pygame_handler.pygame_text("Rules", 100, 675, 250)
 
 menu_button = pygame_handler.button("Menu",20,575, 700, 200, 100, (255,0,0), (230,0,0))
@@ -29,8 +30,7 @@ def rule_loop():
 
             pygame.display.update()
 
-rule_loop()
-pygame.display.quit()
-pygame.quit()
-quit()
-
+#rule_loop()
+#pygame.display.quit()
+#pygame.quit()
+#quit()
