@@ -1,32 +1,15 @@
 from random import shuffle
 
 
-# Handles player money
+# Handles player money and hand
 class Player(object):
-    def __init__(self, my_money=1000):
-        self.my_money = my_money
-
-    # decreases player money by amount
-    def decrease_money(self, money):
-        self.my_money = self.my_money - money
-
-    # increases player money by amount
-    def increase_money(self, money):
-        self.my_money = self.my_money + money
-
-    # returns the amount of money
-    def get_money(self):
-        return self.my_money
-
-
-# Class that handles player hand
-class Hand(object):
-    def __init__(self, current_card_deck):
+    def __init__(self, current_card_deck, my_money = 1000):
         hand_list = []
         hand_list.append(Card_deck.get_random_card(current_card_deck))
         hand_list.append(Card_deck.get_random_card(current_card_deck))
         self.hand = hand_list
         self.card_deck = current_card_deck
+        self.my_money = my_money
 
     # adds a random card from card_deck to hand
     def hit(self):
@@ -40,12 +23,24 @@ class Hand(object):
     def get_hand(self):
         return self.hand
 
+    # shows the score of current hand
     def score(self):
         score = 0
         for elem in self.hand:
-            ##
+            self.hand = self.hand.sort()
             print("fix me")
 
+    # decreases player money by amount
+    def decrease_money(self, money):
+        self.my_money = self.my_money - money
+
+    # increases player money by amount
+    def increase_money(self, money):
+        self.my_money = self.my_money + money
+
+    # returns the amount of money
+    def get_money(self):
+        return self.my_money
 
 # handles the current bet
 class Bet(object):
@@ -65,8 +60,8 @@ class Bet(object):
 class Card_deck(object):
     # creates a new deck
     def __init__(self):
-        self.card_pack = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-                          14] * 4
+        self.card_pack = [2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K",
+                          "A"] * 4
 
     # shuffles the deck using shuffle form random module
     def shuffle_deck(self):
