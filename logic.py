@@ -23,6 +23,11 @@ class Player(object):
     def get_hand(self):
         return self.hand
 
+    #only purpose is to guarantee an insta win for player by setting the ai over 21
+    def set_hand(self):
+        self.hand.extend(["J","Q","K"])
+
+
     # shows the score of current hand
     def score(self):
         score = 0
@@ -40,7 +45,21 @@ class Player(object):
                     score += 1
         return score
 
-
+    def ai_score(self):
+        score = 0
+        hand_list = self.hand[:1]
+        for elem in hand_list:
+            if elem == "J" or elem == "Q" or elem == "K":
+                score += 10
+            elif elem != "A":
+                score += elem
+        for elem in hand_list:
+            if elem == "A":
+                if score <= 11:
+                    score += 10
+                else:
+                    score += 1
+        return score
     # decreases player money by amount
     def decrease_money(self, money):
         self.my_money = self.my_money - money

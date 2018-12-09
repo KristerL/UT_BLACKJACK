@@ -27,12 +27,12 @@ background_image = ImageLoad.Image("test2.jpg")
 card_deck = logic.Card_deck()
 card_deck.shuffle_deck()
 
-bet_button = pygame_handler.button("Bet", 20, 475, 700, 200, 100, (255, 0, 0), (230, 0, 0))
-hit_button = pygame_handler.button("Hit", 20, 175, 700, 200, 100, (255, 0, 0), (230, 0, 0))
-hit_button1 = pygame_handler.button("Hit", 20, 75, 700, 200, 100, (255, 0, 0), (230, 0, 0))
-surrender_button = pygame_handler.button("Surrender", 20, 775, 700, 200, 100, (255, 0, 0), (230, 0, 0))
-stand_button = pygame_handler.button("Stand", 20, 1075, 700, 200, 100, (255, 0, 0), (230, 0, 0))
-continue_button = pygame_handler.button("Continue", 20, 1075, 700, 200, 100, (255, 0, 0), (230, 0, 0))
+# bet_button = pygame_handler.button("Bet", 20, 475, 700, 200, 100, (255, 0, 0), (230, 0, 0))
+# hit_button = pygame_handler.button("Hit", 20, 175, 700, 200, 100, (255, 0, 0), (230, 0, 0))
+# hit_button1 = pygame_handler.button("Hit", 20, 75, 700, 200, 100, (255, 0, 0), (230, 0, 0))
+# surrender_button = pygame_handler.button("Surrender", 20, 775, 700, 200, 100, (255, 0, 0), (230, 0, 0))
+# stand_button = pygame_handler.button("Stand", 20, 1075, 700, 200, 100, (255, 0, 0), (230, 0, 0))
+# continue_button = pygame_handler.button("Continue", 20, 1075, 700, 200, 100, (255, 0, 0), (230, 0, 0))
 
 def display_hand(hand_list, height = 10):
     i = 0
@@ -76,7 +76,7 @@ def menu_loop():
 
             elif screen == "game":
                 game_loop()
-                crashed = True
+                screen = "menu"
 
 
 
@@ -112,9 +112,7 @@ def game_loop():
     player_info = logic.Player(card_deck)
     ai_info = logic.Player(card_deck)
 
-    player_score_var = player_info.score()
-    ai_score_var = ai_info.score()
-    player_balance_var = player_info.get_money()
+
 
     text1 = ("[H]it, [S]tand, [D]ouble down")
     text2 = ("[Hit, [S]tand")
@@ -128,11 +126,11 @@ def game_loop():
 
     while not crashed:
 
-        player_score = pygame_handler.pygame_text("Score: " + str(player_score_var), 30, 350, 450)
-        ai_score = pygame_handler.pygame_text("Score: " + str(ai_score_var), 30, 350, 600)
-        player_balance = pygame_handler.pygame_text("Balance: " + str(player_balance_var), 30, 700, 400)
+        player_score = pygame_handler.pygame_text("Score: " + str(player_info.score()), 30, 350, 450)
+        ai_score = pygame_handler.pygame_text("Score: " + str(ai_info.ai_score()), 30, 350, 600)
+        player_balance = pygame_handler.pygame_text("Balance: " + str(player_info.get_money()), 30, 700, 400)
         instructions = pygame_handler.pygame_text(text_var, 30, 350, 800)
-        result = pygame_handler.pygame_text(text_var2, 30, 600, 800)
+        result = pygame_handler.pygame_text(text_var2, 30, 700, 800)
 
         for event in pygame.event.get():
 
@@ -147,6 +145,7 @@ def game_loop():
             display_hand(ai_info.get_hand()[:1],200)
 
             if current_frame == "phase1":
+
                 player_info = logic.Player(card_deck, player_info.get_money())
                 ai_info = logic.Player(card_deck)
                 text_var = text1
@@ -155,40 +154,55 @@ def game_loop():
 
             if current_frame == "phase2":
                 bet = logic.Bet(100)
+                if len(player_info.get_hand()) == 2 and player_info.score() == 21:
+                    ai_info.set_hand()
+                    bet.add_bet(50)
+                    current_frame == "phase3"
                 if event.type == KEYDOWN:
 
                     if event.key == pygame.K_h:
                         player_info.hit()
-                        player_score_var = player_info.score()
                         text_var = text2
                     if event.key == pygame.K_s:
                         current_frame = "phase3"
                     if event.key == pygame.K_d:
-                        bet = logic.Bet(200)
+                        bet.add_bet(100)
                         player_info.hit()
-                        player_score_var = player_info.score()
+
                         current_frame = "phase3"
 
             if current_frame == "phase3":
                 for i in range(2):
                     if ai_info.score() < 17 and ai_info.score() < player_info.score():
                         ai_info.hit()
-                        ai_score_var = ai_info.score()
 
-                if player_info.score() > ai_info.score():
+
+
+                if player_info.score() > 21 and ai_info.score() <= 21:
+                    text_var2 = text4
+                    player_info.decrease_money(bet.get_bet())
+                elif player_info.score() > 21 and ai_info.score() > 21:
+                    text_var2 = text6
+                    player_info.increase_money(bet.get_bet())
+                elif player_info.score() <= 21 and ai_info.score() > 21:
                     text_var2 = text5
-                    player_info.increase_money(bet)
-                    player_balance_var = player_info.get_money()
+                elif player_info.score() > ai_info.score():
+                    text_var2 = text5
+                    player_info.increase_money(bet.get_bet())
+                    #player_balance_var = player_info.get_money()
                 elif player_info.score() < ai_info.score():
                     text_var2 = text4
-                    player_info.decrease_money(bet)
-                    player_balance_var = player_info.get_money()
+                    player_info.decrease_money(bet.get_bet())
+                    #player_balance_var = player_info.get_money()
                 else:
                     text_var2 = text6
                 current_frame = "phase4"
 
             if current_frame == "phase4":
                 text_var = text3
+                display_hand(ai_info.get_hand()[:], 200)
+                ai_score = pygame_handler.pygame_text("Score: " + str(ai_info.score()), 30, 350, 600)
+                ai_score.display(starter_class.game_display)
                 if event.type == KEYDOWN:
                     if event.key == K_q:
                         crashed = True
