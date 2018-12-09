@@ -14,7 +14,11 @@ clock = pygame.time.Clock()
 card_deck = logic.Card_deck()
 card_deck.shuffle_deck()
 
+bet_button = pygame_handler.button("Bet", 20, 575, 700, 200, 100, (255, 0, 0), (230, 0, 0))
+hit_button = pygame_handler.button("Hit", 20, 275, 700, 200, 100, (255, 0, 0), (230, 0, 0))
+
 def game_loop():
+
 
     def game_start(card_deck):
         player_info = logic.Player(card_deck)
@@ -24,44 +28,43 @@ def game_loop():
     crashed = False
     next_frame = 1
 
-    bet_button = pygame_handler.button("Bet", 20, 575, 700, 200, 100, (255, 0, 0), (230, 0, 0))
-    hit_button = pygame_handler.button("Hit", 20, 275, 700, 200, 100, (255, 0, 0), (230, 0, 0))
-
     while not crashed:
-
-        # background image
-        game_screen.game_display.blit(background_image.get_image(), (0, 0))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 crashed = True
 
-        bet = bet_button.display_button(game_screen.game_display)
-        hit = hit_button.display_button(game_screen.game_display)
+            game_screen.game_display.blit(background_image.get_image(), (0, 0))
 
-        if next_frame == 1:
-            player_info, ai_info = game_start(card_deck)
+            bet = bet_button.display_button(game_screen.game_display)
+            hit = hit_button.display_button(game_screen.game_display)
+
+            if next_frame == 1:
+                player_info, ai_info = game_start(card_deck)
 
 
-        card1_player = ImageLoad.Image("cardClubs" + str(player_info.get_hand()[0]))
-        card2_player = ImageLoad.Image("cardClubs" + str(player_info.get_hand()[1]))
-        card1_ai = ImageLoad.Image("cardClubs" + str(player_info.get_hand()[0]))
-        card2_ai = ImageLoad.Image("cardBack_red1")
-        game_screen.game_display.blit(card1_player.get_image(), (50, 10))
-        game_screen.game_display.blit(card2_player.get_image(), (200, 10))
-        game_screen.game_display.blit(card1_ai.get_image(), (50, 200))
-        game_screen.game_display.blit(card2_ai.get_image(), (200, 200))
+            card1_player = ImageLoad.Image("cardClubs" + str(player_info.get_hand()[0]))
+            card2_player = ImageLoad.Image("cardClubs" + str(player_info.get_hand()[1]))
+            card1_ai = ImageLoad.Image("cardClubs" + str(player_info.get_hand()[0]))
+            card2_ai = ImageLoad.Image("cardBack_red1")
+            game_screen.game_display.blit(card1_player.get_image(), (50, 10))
+            game_screen.game_display.blit(card2_player.get_image(), (200, 10))
+            game_screen.game_display.blit(card1_ai.get_image(), (50, 200))
+            game_screen.game_display.blit(card2_ai.get_image(), (200, 200))
 
-        if hit:
-            player_info.hit()
-            card3_player = ImageLoad.Image("cardClubs" + str(player_info.get_hand()[2]))
-            game_screen.game_display.blit(card3_player.get_image(), (350, 10))
-            next_frame = 1
+            if hit:
+                print("hey")
+                player_info.hit()
+                card3_player = ImageLoad.Image("cardClubs" + str(player_info.get_hand()[2]))
+                game_screen.game_display.blit(card3_player.get_image(), (350, 10))
+                next_frame = 1
+                hit = False
 
-        if next_frame == 1:
-            next_frame = 0
-            pygame.display.update()
-            clock.tick(30)
+
+            if next_frame == 1:
+                next_frame = 0
+                pygame.display.update()
+                clock.tick(30)
 
 game_loop()
 pygame.quit()

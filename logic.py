@@ -26,9 +26,20 @@ class Player(object):
     # shows the score of current hand
     def score(self):
         score = 0
-        for elem in self.hand:
-            self.hand = self.hand.sort()
-            print("fix me")
+        hand_list = self.hand[:]
+        for elem in hand_list:
+            if elem == "J" or elem == "Q" or elem == "K":
+                score += 10
+            elif elem != "A":
+                score += elem
+        for elem in hand_list:
+            if elem == "A":
+                if score <= 11:
+                    elem += 10
+                else:
+                    elem += 1
+        return score
+
 
     # decreases player money by amount
     def decrease_money(self, money):
