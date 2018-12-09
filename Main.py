@@ -1,6 +1,6 @@
 import pygame
 from pygame import *
-        #import main_menu
+import main_menu
 import logic
 
 card_deck = logic.Card_deck()
