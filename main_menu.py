@@ -32,6 +32,7 @@ hit_button = pygame_handler.button("Hit", 20, 175, 700, 200, 100, (255, 0, 0), (
 hit_button1 = pygame_handler.button("Hit", 20, 75, 700, 200, 100, (255, 0, 0), (230, 0, 0))
 surrender_button = pygame_handler.button("Surrender", 20, 775, 700, 200, 100, (255, 0, 0), (230, 0, 0))
 stand_button = pygame_handler.button("Stand", 20, 1075, 700, 200, 100, (255, 0, 0), (230, 0, 0))
+continue_button = pygame_handler.button("Continue", 20, 1075, 700, 200, 100, (255, 0, 0), (230, 0, 0))
 player_info = logic.Player(card_deck)
 ai_info = logic.Player(card_deck)
 
@@ -110,6 +111,26 @@ def game_loop():
     crashed = False
     current_frame = 0
 
+    def update_score(score):
+        score_text = pygame_handler.pygame_text(("Score: +" + str(score)), 30, 350, 500)
+        return score_text
+
+    def update_money(money, boolean):
+        if boolean == False:
+            bet = player_bet.get_bet()
+            money = player_info.decrease_money(bet)
+            player_balance = pygame_handler.pygame_text("Balance: " + str(money), 30, 800, 500)
+            return player_balance
+        elif boolean == True:
+            bet = player_bet.get_bet()
+            money = player_info.increase_money(bet)
+            player_balance = pygame_handler.pygame_text("Balance: " + str(money), 30, 800, 500)
+            return player_balance
+        elif boolean == 0:
+            player_balance = pygame_handler.pygame_text("Balance: " + str(money), 30, 800, 500)
+            return player_balance
+
+
     while not crashed:
 
         for event in pygame.event.get():
@@ -123,6 +144,7 @@ def game_loop():
                 ai_info = logic.Player(card_deck)
                 current_frame += 1
 
+
             if current_frame == 1:
 
                 player_bet = logic.Bet(100)
@@ -132,8 +154,14 @@ def game_loop():
                 stand = stand_button.display_button(starter_class.game_display)
                 display_hand(player_info.get_hand())
                 display_hand(ai_info.get_hand()[:1],200)
+                score_text_player = update_score(player_info.score())
+                score_text_player.display(starter_class.game_display)
+                player_balance = update_money(player_info.get_money(), 0)
+                player_balance.display(starter_class.game_display)
                 if hit:
                     player_info.hit()
+                    score_text_player = update_score(player_info.score())
+                    score_text_player.display(starter_class.game_display)
                     hit = False
                     time.sleep(3)
                     current_frame += 1
@@ -142,6 +170,8 @@ def game_loop():
                     bet = False
                 if surrender:
                     player_info.decrease_money(player_bet.get_bet())
+                    player_balance = update_money(player_info.get_money(), 0)
+                    player_balance.display(starter_class.game_display)
                     current_frame += 2
                     surrender = False
                 if stand:
@@ -155,7 +185,15 @@ def game_loop():
                 stand = stand_button.display_button(starter_class.game_display)
                 display_hand(player_info.get_hand())
                 display_hand(ai_info.get_hand()[:1], 200)
+                score_text_player = update_score(player_info.score())
+                score_text_player.display(starter_class.game_display)
+                player_balance = update_money(player_info.get_money(), 0)
+                player_balance.display(starter_class.game_display)
                 if hit:
+                    score_text_player = update_score(player_info.score())
+                    score_text_player.display(starter_class.game_display)
+                    player_balance = update_money(player_info.get_money(), 0)
+                    player_balance.display(starter_class.game_display)
                     player_info.hit()
                     hit = False
                 if bet:
@@ -169,14 +207,46 @@ def game_loop():
             if current_frame == 3:
                 display_hand(player_info.get_hand())
                 display_hand(ai_info.get_hand(), 200)
+                score_text_player = update_score(player_info.score())
+                score_text_player.display(starter_class.game_display)
+                player_balance = update_money(player_info.get_money(), 0)
+                player_balance.display(starter_class.game_display)
                 while ai_info.score() < 17:
                     ai_info.hit()
                     time.sleep(4)
+                score_text_ai = pygame_handler.pygame_text(("Ai score: +" + str(ai_info.score())), 30, 400, 600)
+                score_text_ai.display(starter_class.game_display)
+                player_balance = update_money(player_info.get_money(), 0)
+                player_balance.display(starter_class.game_display)
                 current_frame +=1
 
             if current_frame == 4:
                 display_hand(player_info.get_hand())
                 display_hand(ai_info.get_hand(), 200)
+                cont = continue_button.display_button(starter_class.game_display)
+                quit = quit_button.display_button((starter_class.game_display))
+                score_text_player = update_score(player_info.score())
+                score_text_player.display(starter_class.game_display)
+                score_text_ai = pygame_handler.pygame_text(("Ai score: +" + str(ai_info.score())), 30, 400, 600)
+                score_text_ai.display(starter_class.game_display)
+                player_balance = update_money(player_info.get_money(), 0)
+                player_balance.display(starter_class.game_display)
+                if ai_info.score() > player_info.score():
+                    player_balance = update_money(player_info.get_money(), False)
+                    player_balance.display((starter_class.game_display))
+                    time.sleep(5)
+                elif player_info.score() > ai_info.score():
+                    player_balance = update_money(player_info.get_money(), True)
+                    player_balance.display(starter_class.game_display)
+                    time.sleep(5)
+
+                if cont:
+                    current_frame = 0
+                    cont = False
+                if quit:
+                    crashed = True
+
+
 
 
 

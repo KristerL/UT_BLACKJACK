@@ -35,9 +35,9 @@ class Player(object):
         for elem in hand_list:
             if elem == "A":
                 if score <= 11:
-                    elem += 10
+                    score += 10
                 else:
-                    elem += 1
+                    score += 1
         return score
 
 
