@@ -126,8 +126,7 @@ def game_loop():
 
     while not crashed:
 
-        player_score = pygame_handler.pygame_text("Score: " + str(player_info.score()), 30, 350, 450)
-        ai_score = pygame_handler.pygame_text("Score: " + str(ai_info.ai_score()), 30, 350, 600)
+        player_score = pygame_handler.pygame_text("Score: " + str(player_info.score())   , 30, 350, 450)
         player_balance = pygame_handler.pygame_text("Balance: " + str(player_info.get_money()), 30, 700, 400)
         instructions = pygame_handler.pygame_text(text_var, 30, 350, 800)
         result = pygame_handler.pygame_text(text_var2, 30, 700, 800)
@@ -139,10 +138,18 @@ def game_loop():
             instructions.display(starter_class.game_display)
             result.display(starter_class.game_display)
             player_score.display(starter_class.game_display)
-            ai_score.display(starter_class.game_display)
+
             player_balance.display(starter_class.game_display)
             display_hand(player_info.get_hand())
-            display_hand(ai_info.get_hand()[:1],200)
+            if current_frame != "phase3" and current_frame != "phase4":
+                ai_score = pygame_handler.pygame_text("Score: " + str(ai_info.ai_score()), 30, 350, 600)
+                display_hand(ai_info.get_hand()[:1], 200)
+                ai_score.display(starter_class.game_display)
+            else:
+                ai_score = pygame_handler.pygame_text("Score: " + str(ai_info.score()), 30, 350, 600)
+                display_hand(ai_info.get_hand()[:], 200)
+                ai_score.display(starter_class.game_display)
+
 
             if current_frame == "phase1":
 
@@ -150,6 +157,7 @@ def game_loop():
                 ai_info = logic.Player(card_deck)
                 text_var = text1
                 current_frame = "phase2"
+                pygame.display.update()
 
 
             if current_frame == "phase2":
@@ -161,8 +169,9 @@ def game_loop():
                 if event.type == KEYDOWN:
 
                     if event.key == pygame.K_h:
-                        player_info.hit()
-                        text_var = text2
+                        if len(player_info.get_hand()) < 10:
+                            player_info.hit()
+                            text_var = text2
                     if event.key == pygame.K_s:
                         current_frame = "phase3"
                     if event.key == pygame.K_d:
@@ -201,8 +210,6 @@ def game_loop():
             if current_frame == "phase4":
                 text_var = text3
                 display_hand(ai_info.get_hand()[:], 200)
-                ai_score = pygame_handler.pygame_text("Score: " + str(ai_info.score()), 30, 350, 600)
-                ai_score.display(starter_class.game_display)
                 if event.type == KEYDOWN:
                     if event.key == K_q:
                         crashed = True
