@@ -11,6 +11,7 @@ starter_class = pygame_handler.pygame_starter()
 
 # background image is created using the image loading class
 background_image = ImageLoad.Image("main_page.jpeg")
+rules_image = ImageLoad.Image("rules.png")
 #rules_image = ImageLoad.Image("")
 # welcome text is generated using the pygame_text class from pygame_handler
 welcome_text = pygame_handler.pygame_text("Welcome to Blackjack!", 100, 675, 250)
@@ -73,6 +74,7 @@ def menu_loop():
             elif screen == "rule_page":
                 starter_class.game_display.blit(background_image.get_image(), (0, 0))
 
+                starter_class.game_display.blit(rules_image.get_image(), (344, 20))
 
                 to_main_page = menu_button.display_button(starter_class.game_display)
 
