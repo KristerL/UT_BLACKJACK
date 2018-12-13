@@ -17,16 +17,13 @@ rules_image = ImageLoad.Image("rules.png")
 welcome_text = pygame_handler.pygame_text("Welcome to Blackjack!", 100, 675, 250)
 rules_header = pygame_handler.pygame_text("Rules page!", 100, 675, 250)
 # QUIT button is created using the button class from pygame_handler
-quit_button = pygame_handler.button("Quit", 50, 575, 700, 200, 100, (230, 0, 0), (255, 30, 30))
-game_start_button = pygame_handler.button("Start", 50, 575, 400, 200, 100, (0, 230, 0), (30, 255, 30))
-rules_button = pygame_handler.button("Rules", 50, 575, 550, 200, 100, (0, 0, 230), (30, 30, 255))
-menu_button = pygame_handler.button("Menu", 50, 575, 700, 200, 100, (230, 0, 0), (255, 30, 30))
+quit_button = pygame_handler.button("Quit", 50, 575, 650, 200, 100, (230, 0, 0), (255, 30, 30))
+game_start_button = pygame_handler.button("Start", 50, 575, 350, 200, 100, (0, 230, 0), (30, 255, 30))
+rules_button = pygame_handler.button("Rules", 50, 575, 500, 200, 100, (0, 0, 230), (30, 30, 255))
+menu_button = pygame_handler.button("Menu", 50, 575, 750, 200, 100, (230, 0, 0), (255, 30, 30))
 
 
 background_image = ImageLoad.Image("test2.jpg")
-
-card_deck = logic.Card_deck()
-card_deck.shuffle_deck()
 
 clock = pygame.time.Clock()
 
@@ -113,17 +110,22 @@ def game_loop():
     crashed = False
     current_frame = "phase2"
 
+    card_deck = logic.Card_deck()
+    card_deck.shuffle_deck()
+
     player_info = logic.Player(card_deck)
     ai_info = logic.Player(card_deck)
 
 
 
+
     text1 = ("[H]it, [S]tand, [D]ouble down")
-    text2 = ("[Hit, [S]tand")
+    text2 = ("[H]it, [S]tand")
     text3 = ("[C]ontinue, [Q]uit")
     text4 = ("Dealer won!")
     text5 = ("You won!")
     text6 = ("Tie!")
+    text7 = ("Game over! [Q]uit" )
     text_blank = ""
     text_var = text1
     text_var2 = text_blank
@@ -145,8 +147,9 @@ def game_loop():
 
             player_balance.display(starter_class.game_display)
             display_hand(player_info.get_hand())
+
             if current_frame != "phase3" and current_frame != "phase4":
-                ai_score = pygame_handler.pygame_text("Dealer's score: " + str(ai_info.ai_score()), 40, 550, 500)
+                ai_score = pygame_handler.pygame_text("Dealer's score: " + str(ai_info.ai_score()), 40, 850, 500)
                 display_hand(ai_info.get_hand()[:1], 200)
                 ai_score.display(starter_class.game_display)
             else:
@@ -155,6 +158,11 @@ def game_loop():
                 ai_score.display(starter_class.game_display)
 
             if current_frame == "phase1":
+                if card_deck.get_length() < 9:
+                    card_deck = logic.Card_deck()
+                    card_deck.shuffle_deck()
+                else:
+                    card_deck = card_deck
 
                 text_var2 = text_blank
                 player_info = logic.Player(card_deck, player_info.get_money())
@@ -216,11 +224,20 @@ def game_loop():
             if current_frame == "phase4":
                 text_var = text3
                 display_hand(ai_info.get_hand()[:], 200)
-                if event.type == KEYDOWN:
-                    if event.key == K_q:
-                        crashed = True
-                    if event.key == K_c:
-                        current_frame = "phase1"
+                if player_info.get_money() > 50:
+                    if event.type == KEYDOWN:
+                        if event.key == K_q:
+                            crashed = True
+                        if event.key == K_c:
+                            current_frame = "phase1"
+                else:
+                    text_var2 = text7
+                    text_var = ""
+
+                    if event.type == KEYDOWN:
+                        if event.key == K_q:
+                            crashed = True
+
 
 
             if event.type == pygame.QUIT:
